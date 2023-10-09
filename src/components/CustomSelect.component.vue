@@ -41,7 +41,7 @@ export default {
     name: 'CustomSelect',
     mixins: [InputMixin],
     props: {
-        value: String, Number,
+        value: [String, Number],
         items: {
             type: Array,
             required: true,
@@ -55,8 +55,12 @@ export default {
             selected: null
         }
     },
+    created() {
+        this.selected = this.items.find(item => item.value === this.value);
+    },  
     mounted() {
         document.addEventListener('click', this.onSelectMissclick)
+        this.$refs.input.value = this.selected.name;
     },  
     beforeDestroy() {
         document.removeEventListener('click', this.onSelectMissclick)

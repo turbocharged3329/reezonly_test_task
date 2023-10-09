@@ -1,6 +1,12 @@
 <template>
   <div id="app">
-    <registration-form></registration-form>
+    <registration-form
+    :default-values="{
+      name: 'Vlad',
+      isPublicProfile: true,
+      selectedPost: '3'
+    }"
+    ></registration-form>
   </div>
 </template>
 

@@ -73,10 +73,15 @@
                 <button 
                     class="submit-section__button" 
                     type="button"
+                    @click="sendForm"
                 >Регистрация</button>
             </section>
         </section>
-        
+        <keep-alive>
+            <div class="loader" v-if="isLoading">
+                <img  src="/loader.svg" class="loader__element" loading="lazy">
+            </div>
+        </keep-alive>
     </form>
 </template>
 <script>
@@ -93,40 +98,52 @@ export default {
         CustomSelect,
         CustomCheckbox
     },
+    props: {
+        defaultValues: {
+            type: Object,
+            default: () => {}
+        }
+    },  
     data() {
         return {
+            isLoading: false,
             name: '',
             email: '',
             password: '',
             password_repeat: '',
             selectedPost: null, 
             isPublicProfile: false,
-            agreement: false,
+            agreement: true,
             selectItems: [
                 {
                     id: 1,
                     value: '1',
-                    name: 'a',
+                    name: 'Должность 1',
                 },
                 {
                     id: 2,
                     value: '2',
-                    name: 'b',
+                    name: 'Должность 2',
                 },
                 {
                     id: 3,
                     value: '3',
-                    name: 'с',
+                    name: 'Должность 3',
                 },
             ],
             errors: {
-                name: '123',
-                post: '123',
-                email: '123',
-                password: '123',
-                password_repeat: '123',
+                name: null,
+                post: null,
+                email: null,
+                password: null,
+                password_repeat: null,
             }
         }
+    },
+    created() {
+        Object.keys(this.defaultValues).forEach(key => {
+            this[key] = this.defaultValues?.[key];
+        })
     },
     methods: {
         resetValidation(fieldName) {
@@ -135,6 +152,34 @@ export default {
         resetPasswordsValidation() {
             this.resetValidation('password')
             this.resetValidation('password_repeat')
+        },
+        async sendForm() {
+            this.isLoading = true;
+            const body = JSON.stringify({
+                public: +this.isPublicProfile, 
+                username: this.name,
+                role: +this.selectedPost,
+                email: this.email,
+                password: this.password,
+                password_repeat: this.password_repeat
+            })
+            const response = await fetch('https://lmstestapi.reezonly.com/v1/user/signup', 
+            {
+                method: 'POST',
+                body
+            })
+            const data = await response.json();
+            
+            if (!data.success) {
+                if (data.errors.length) {
+                    const errors = data.errors || {name: ['123']}
+                    Object.keys(errors).forEach(error => {
+                        this.errors[error] = errors[error][0]; 
+                    })
+                }
+            }
+
+            this.isLoading = false;
         }
     }
 }
@@ -149,7 +194,7 @@ export default {
     box-sizing: border-box;
     padding-top: 27px;
     padding-bottom: 42px;
-
+    position: relative;
     .title {
         color: $grayscale-900;
         font-size: pxToRem(19);
@@ -246,6 +291,23 @@ export default {
             &:hover {
                 background-color: #e8f8ec;
             }
+        }
+    }
+    .loader {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        z-index: 999;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0, .2);
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: center;
+        align-items: center;
+        &__element {
+            width: 64px;
+            height: 64px;
         }
     }
 }

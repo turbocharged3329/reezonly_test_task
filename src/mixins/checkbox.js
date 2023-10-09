@@ -14,13 +14,13 @@ export default {
     },
     created() {
         this.id = this.$root.getUniqId();
+        this.isActive = this.value;
     },
     methods: {
         onChangeActivity() {
             this.$refs.input.checked = !this.$refs.input.checked;
             this.isActive = this.$refs.input.checked;  
             this.emitActive()
-            console.log(this.isActive);
         },
         emitActive() {
             this.$emit('input', this.isActive)
