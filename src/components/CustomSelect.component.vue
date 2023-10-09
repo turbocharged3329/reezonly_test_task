@@ -10,7 +10,7 @@
             :placeholder="placeholder"
             @click="onSelectInputClick"  
             @keydown="preventInput" 
-            @change="emitSelected"
+            @change="emitEvents"
         /> 
         <i 
             class="custom-select__toggler-icon" 
@@ -30,6 +30,7 @@
                 </div>
             </template>
         </div>
+        <span v-if="error" class="custom-field__error-message">123</span>
     </div>
 </template>
 
@@ -67,7 +68,7 @@ export default {
         chooseItem(itemData) {
             this.selectedItem = itemData;
             this.$refs.input.value = itemData.name;
-            this.emitSelected();
+            this.emitEvents();
             this.isFocused = false;
         },
         onSelectMissclick(e) {
@@ -75,8 +76,9 @@ export default {
                 this.isFocused = false;
             }
         },
-        emitSelected() {
+        emitEvents() {
             this.$emit('input', this.selectedItem.value)
+            this.$emit('resetValidation')
         },
         preventInput(e) {
             e.preventDefault()
@@ -87,6 +89,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$toggler-icon: url("data:image/svg+xml,%3Csvg width='19' height='19' viewBox='0 0 19 19' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M13 9L9.5 12L6 9' stroke='%23A7A7B6' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
+        
 .custom-select {
     position: relative;
 
@@ -105,7 +109,7 @@ export default {
         background-size: contain;
         background-position: center;
         background-repeat: no-repeat;
-        background-image: url("data:image/svg+xml,%3Csvg width='19' height='19' viewBox='0 0 19 19' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M13 9L9.5 12L6 9' stroke='%23A7A7B6' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
+        background-image: $toggler-icon;
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
@@ -142,7 +146,7 @@ export default {
         padding-left: 1rem;
         &:hover {
             background-color: rgba(122, 151, 255, 0.15);
-            color: $grayscale-50;
+            color: $grayscale-900;
         }
     }
 }

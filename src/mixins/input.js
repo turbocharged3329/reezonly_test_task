@@ -3,6 +3,9 @@ export default {
         placeholder: {
             type: String,
             default: ''
+        },
+        error: {
+            type: String
         }
     },
     data() {

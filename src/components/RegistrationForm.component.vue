@@ -8,6 +8,7 @@
                 <custom-toggler 
                     :label="'Публичный профиль'" 
                     :description="'Включает профиль для просмотра другими пользователями по ссылке'"
+                    v-model="isPublicProfile"
                 ></custom-toggler>
             </div>
             <div class="registration-form__data">
@@ -18,6 +19,8 @@
                             v-model="name" 
                             placeholder="Имя" 
                             type="text"
+                            :error="errors.name"
+                            @resetValidation="resetValidation('name')"
                         ></custom-input>
                     </div>
                     <div class="column">
@@ -25,6 +28,8 @@
                             :placeholder="'Должность'"   
                             :items="selectItems" 
                             v-model="selectedPost"
+                            :error="errors.post"
+                            @resetValidation="resetValidation('post')"
                         >
                         </custom-select>
                     </div>
@@ -35,6 +40,8 @@
                             v-model="email" 
                             placeholder="E-mail" 
                             type="text"
+                            :error="errors.email"
+                            @resetValidation="resetValidation('email')"
                         ></custom-input>
                     </div>
                     <div class="column"></div>
@@ -45,6 +52,8 @@
                             v-model="password" 
                             placeholder="Пароль" 
                             type="password"
+                            :error="errors.password"
+                            @resetValidation="resetPasswordsValidation"
                         ></custom-input>
                     </div>
                     <div class="column">
@@ -52,10 +61,20 @@
                             v-model="password_repeat" 
                             placeholder="Повторите пароль" 
                             type="password"
+                            :error="errors.password_repeat"
+                            @resetValidation="resetPasswordsValidation"
                         ></custom-input>
                     </div>
                 </div>
             </div>
+            <section class="submit-section">
+                <p class="submit-section__description">Нажимая на кнопку “Регистрация”, я подтверждаю свое согласение с политикой конфиденциальности и обработки персональных данных</p>
+                <custom-checkbox v-model="agreement"></custom-checkbox>
+                <button 
+                    class="submit-section__button" 
+                    type="button"
+                >Регистрация</button>
+            </section>
         </section>
         
     </form>
@@ -64,13 +83,15 @@
 import CustomInput from "@/components/CustomInput.component.vue";
 import CustomToggler from "@/components/CustomToggler.component.vue";
 import CustomSelect from "@/components/CustomSelect.component.vue";
+import CustomCheckbox from '@/components/CustomCheckbox.component.vue';
 
 export default {
     name: 'RegistrationForm',
     components: {
         CustomInput,
         CustomToggler,
-        CustomSelect
+        CustomSelect,
+        CustomCheckbox
     },
     data() {
         return {
@@ -79,6 +100,8 @@ export default {
             password: '',
             password_repeat: '',
             selectedPost: null, 
+            isPublicProfile: false,
+            agreement: false,
             selectItems: [
                 {
                     id: 1,
@@ -96,6 +119,22 @@ export default {
                     name: 'с',
                 },
             ],
+            errors: {
+                name: '123',
+                post: '123',
+                email: '123',
+                password: '123',
+                password_repeat: '123',
+            }
+        }
+    },
+    methods: {
+        resetValidation(fieldName) {
+            this.errors[fieldName] = null;
+        },
+        resetPasswordsValidation() {
+            this.resetValidation('password')
+            this.resetValidation('password_repeat')
         }
     }
 }
@@ -104,6 +143,7 @@ export default {
 .registration-form {
     width: 958px;
     min-height: 638px;
+    height: 638px;
     border-radius: pxToRem(15)  ;
     background-color: $grayscale-50;
     box-sizing: border-box;
@@ -168,6 +208,44 @@ export default {
         .column {
             flex-basis: 49%;
             height: auto;
+        }
+    }
+    .submit-section {
+        box-sizing: border-box;
+        padding: 25px 27px 0 27px;
+        color: $grayscale-900;
+        font-size: pxToRem(14);
+        font-style: normal;
+        font-weight: 400;
+        line-height: 135.714%;
+        letter-spacing: -0.021px;
+        &__description {
+            margin: 0;
+            margin-bottom: 1rem;
+            width: 85.6%;
+            text-align: left;
+        }
+        &__button {
+            display: block;
+            margin: 0 auto;
+            cursor: pointer;
+            border-radius: pxToRem(9);
+            border: 1px solid $green-600;
+            box-sizing: border-box;
+            padding: pxToRem(10) pxToRem(12);
+            color: $green-600;
+            font-size: pxToRem(14);
+            font-style: normal;
+            font-weight: 400;
+            line-height: 135.714%;
+            letter-spacing: -0.021px;
+            background-color: transparent;
+            transition: .2s linear;
+            width: 234px;
+            height: auto;
+            &:hover {
+                background-color: #e8f8ec;
+            }
         }
     }
 }

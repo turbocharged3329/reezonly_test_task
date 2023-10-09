@@ -9,10 +9,11 @@
             :placeholder="placeholder"
             :type="type"
             :value="value"
-            @input="emitValue"
+            @input="emitEvents"
             @focus="onInputChangeFocus" 
             @blur="onInputChangeFocus"
-            />
+        />
+        <span v-if="error" class="custom-field__error-message">123</span>
     </div>
 </template>
 
@@ -32,15 +33,12 @@ export default {
         },
     },
     methods: {
-        emitValue(e) {
+        emitEvents(e) {
             this.$emit('input', e.target.value)
+            this.$emit('resetValidation')
         }
     }
 }
 </script>
 
-<style lang="scss">
-.custom-input {
-    
-}
-</style>
+<style lang="scss"></style>

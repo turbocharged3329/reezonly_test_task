@@ -1,6 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
 @import 'variables';
 @import 'functions';
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
 
 body {
     width: 100vw;
@@ -22,8 +22,17 @@ body {
     width: 100%;
     border-radius: pxToRem(11);
     border: 1px solid $grayscale-300;
+    position: relative;
     &.focused {
         border-color: $grayscale-600;
+    }
+    &__error-message {
+        color: red;
+        position: absolute;
+        top: calc(100% + 5px);
+        left: 0px;
+        font-size: pxToRem(10);
+        line-height: 100%;
     }
 
     .input--text {

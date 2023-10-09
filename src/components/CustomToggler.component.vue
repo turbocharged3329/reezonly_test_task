@@ -10,7 +10,7 @@
             <div 
                 class="custom-toggler__box" 
                 :class="{'active': isActive}" 
-                @click="onChangeToggler"
+                @click="onChangeActivity"
             >
                 <div class="custom-toggler__element"></div>
             </div>
@@ -21,41 +21,16 @@
 </template>
 
 <script>
+import CheckboxMixin from '@/mixins/checkbox.js'
 export default {
     name: 'CustomToggler',
+    mixins: [CheckboxMixin],
     props: {
-        value: Boolean,
-        label: {
-            type: String,
-            default: '',
-        },
         description: {
             type: String,
             default: '',
         }
     },
-    data() {
-        return {
-            isActive: false,
-            id: null,
-        }
-    },
-    created() {
-        this.id = this.getUniqId();
-    },
-    methods: {
-        onChangeToggler() {
-            this.$refs.input.checked = !this.$refs.input.checked;
-            this.isActive = this.$refs.input.checked;  
-            this.emitActive()
-        },
-        emitActive() {
-            this.$emit('input', this.isActive)
-        },
-        getUniqId() {
-            return "id" + Math.random().toString(16).slice(2);
-        }
-    }
 }
 </script>
 

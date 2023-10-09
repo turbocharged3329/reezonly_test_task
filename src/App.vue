@@ -10,12 +10,7 @@ export default {
   name: 'App',  
   components: {
     RegistrationForm
-  }
+  },
 }
 </script>
 
-<style lang="scss">
-#app {
-
-}
-</style>

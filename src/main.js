@@ -3,6 +3,10 @@ import App from './App.vue'
 
 Vue.config.productionTip = false
 
-new Vue({
+const app = new Vue({
   render: h => h(App),
-}).$mount('#app')
+})
+app.getUniqId = () => {
+  return "id" + Math.random().toString(16).slice(2);
+}
+app.$mount('#app')
