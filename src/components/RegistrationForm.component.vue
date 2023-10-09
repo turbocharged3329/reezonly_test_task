@@ -74,6 +74,7 @@
                     class="submit-section__button" 
                     type="button"
                     @click="sendForm"
+                    :disabled="!agreement"
                 >Регистрация</button>
             </section>
         </section>
@@ -163,23 +164,31 @@ export default {
                 password: this.password,
                 password_repeat: this.password_repeat
             })
-            const response = await fetch('https://lmstestapi.reezonly.com/v1/user/signup', 
-            {
-                method: 'POST',
-                body
-            })
-            const data = await response.json();
-            
-            if (!data.success) {
-                if (data.errors.length) {
-                    const errors = data.errors || {name: ['123']}
-                    Object.keys(errors).forEach(error => {
-                        this.errors[error] = errors[error][0]; 
-                    })
+
+            try {
+                const response = await fetch('https://lmstestapi.reezonly.com/v1/user/signup', 
+                {
+                    method: 'POST',
+                    body
+                })
+                const data = await response.json();
+                
+                if (!data.success) {
+                    if (data.errors.length) {
+                        const errors = data.errors || {name: ['123']}
+                        Object.keys(errors).forEach(error => {
+                            this.errors[error] = errors[error][0]; 
+                        })
+                    }
+                } else {
+                    this.$emit('success')
                 }
+            } catch(e) {
+                console.warn('Server error');
+            } finally {
+                this.isLoading = false;
             }
 
-            this.isLoading = false;
         }
     }
 }
@@ -290,6 +299,10 @@ export default {
             height: auto;
             &:hover {
                 background-color: #e8f8ec;
+            }
+            &:disabled {
+                pointer-events: none;
+                opacity: 0.2;
             }
         }
     }
